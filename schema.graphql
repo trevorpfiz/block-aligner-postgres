@@ -1,0 +1,1091 @@
+schema {
+  query: query_root
+  mutation: mutation_root
+  subscription: subscription_root
+}
+
+"""whether this query should be cached (Hasura Cloud only)"""
+directive @cached(
+  """measured in seconds"""
+  ttl: Int! = 60
+
+  """refresh the cache entry"""
+  refresh: Boolean! = false
+) on QUERY
+
+"""
+Direct the client to resolve this field locally, either from the cache or local resolvers.
+"""
+directive @client(
+  """
+  When true, the client will never use the cache for this value. See
+  https://www.apollographql.com/docs/react/essentials/local-state/#forcing-resolvers-with-clientalways-true
+  """
+  always: Boolean
+) on FIELD | FRAGMENT_DEFINITION | INLINE_FRAGMENT
+
+"""
+Export this locally resolved field as a variable to be used in the remainder of this query. See
+https://www.apollographql.com/docs/react/essentials/local-state/#using-client-fields-as-variables
+"""
+directive @export(
+  """The variable name to export this field as."""
+  as: String!
+) on FIELD
+
+"""
+Specify a custom store key for this result. See
+https://www.apollographql.com/docs/react/advanced/caching/#the-connection-directive
+"""
+directive @connection(
+  """Specify the store key."""
+  key: String!
+
+  """
+  An array of query argument names to include in the generated custom store key.
+  """
+  filter: [String!]
+) on FIELD
+
+scalar date
+
+"""
+Boolean expression to compare columns of type "date". All fields are combined with logical 'AND'.
+"""
+input date_comparison_exp {
+  _eq: date
+  _gt: date
+  _gte: date
+  _in: [date!]
+  _is_null: Boolean
+  _lt: date
+  _lte: date
+  _neq: date
+  _nin: [date!]
+}
+
+"""
+Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'.
+"""
+input Int_comparison_exp {
+  _eq: Int
+  _gt: Int
+  _gte: Int
+  _in: [Int!]
+  _is_null: Boolean
+  _lt: Int
+  _lte: Int
+  _neq: Int
+  _nin: [Int!]
+}
+
+"""mutation root"""
+type mutation_root {
+  """
+  insert data into the table: "protein"
+  """
+  insert_protein(
+    """the rows to be inserted"""
+    objects: [protein_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: protein_on_conflict
+  ): protein_mutation_response
+
+  """
+  insert a single row into the table: "protein"
+  """
+  insert_protein_one(
+    """the row to be inserted"""
+    object: protein_insert_input!
+
+    """on conflict condition"""
+    on_conflict: protein_on_conflict
+  ): protein
+
+  """
+  insert data into the table: "scores_BA"
+  """
+  insert_scores_BA(
+    """the rows to be inserted"""
+    objects: [scores_BA_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: scores_BA_on_conflict
+  ): scores_BA_mutation_response
+
+  """
+  insert a single row into the table: "scores_BA"
+  """
+  insert_scores_BA_one(
+    """the row to be inserted"""
+    object: scores_BA_insert_input!
+
+    """on conflict condition"""
+    on_conflict: scores_BA_on_conflict
+  ): scores_BA
+
+  """
+  update data of the table: "protein"
+  """
+  update_protein(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: protein_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: protein_set_input
+
+    """filter the rows which have to be updated"""
+    where: protein_bool_exp!
+  ): protein_mutation_response
+
+  """
+  update single row of the table: "protein"
+  """
+  update_protein_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: protein_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: protein_set_input
+    pk_columns: protein_pk_columns_input!
+  ): protein
+
+  """
+  update data of the table: "scores_BA"
+  """
+  update_scores_BA(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: scores_BA_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: scores_BA_set_input
+
+    """filter the rows which have to be updated"""
+    where: scores_BA_bool_exp!
+  ): scores_BA_mutation_response
+
+  """
+  update single row of the table: "scores_BA"
+  """
+  update_scores_BA_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: scores_BA_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: scores_BA_set_input
+    pk_columns: scores_BA_pk_columns_input!
+  ): scores_BA
+}
+
+"""column ordering options"""
+enum order_by {
+  """in ascending order, nulls last"""
+  asc
+
+  """in ascending order, nulls first"""
+  asc_nulls_first
+
+  """in ascending order, nulls last"""
+  asc_nulls_last
+
+  """in descending order, nulls first"""
+  desc
+
+  """in descending order, nulls first"""
+  desc_nulls_first
+
+  """in descending order, nulls last"""
+  desc_nulls_last
+}
+
+"""
+columns and relationships of "protein"
+"""
+type protein {
+  accession: String!
+  allergy_type: String
+  common_name: String
+  info_created: date
+  info_modified: date
+  info_type: String
+  info_version: Int
+  organism_lineage: String
+  organism_taxonomy: Int
+  protein_name: String
+  protein_type: String
+  scientific_name: String
+  sequence: String!
+  sequence_length: Int
+  sequence_mass: Int
+  sequence_modified: date
+  sequence_version: Int
+  uniprot_id: String!
+}
+
+"""
+aggregated selection of "protein"
+"""
+type protein_aggregate {
+  aggregate: protein_aggregate_fields
+  nodes: [protein!]!
+}
+
+"""
+aggregate fields of "protein"
+"""
+type protein_aggregate_fields {
+  avg: protein_avg_fields
+  count(columns: [protein_select_column!], distinct: Boolean): Int!
+  max: protein_max_fields
+  min: protein_min_fields
+  stddev: protein_stddev_fields
+  stddev_pop: protein_stddev_pop_fields
+  stddev_samp: protein_stddev_samp_fields
+  sum: protein_sum_fields
+  var_pop: protein_var_pop_fields
+  var_samp: protein_var_samp_fields
+  variance: protein_variance_fields
+}
+
+"""aggregate avg on columns"""
+type protein_avg_fields {
+  info_version: Float
+  organism_taxonomy: Float
+  sequence_length: Float
+  sequence_mass: Float
+  sequence_version: Float
+}
+
+"""
+Boolean expression to filter rows from the table "protein". All fields are combined with a logical 'AND'.
+"""
+input protein_bool_exp {
+  _and: [protein_bool_exp!]
+  _not: protein_bool_exp
+  _or: [protein_bool_exp!]
+  accession: String_comparison_exp
+  allergy_type: String_comparison_exp
+  common_name: String_comparison_exp
+  info_created: date_comparison_exp
+  info_modified: date_comparison_exp
+  info_type: String_comparison_exp
+  info_version: Int_comparison_exp
+  organism_lineage: String_comparison_exp
+  organism_taxonomy: Int_comparison_exp
+  protein_name: String_comparison_exp
+  protein_type: String_comparison_exp
+  scientific_name: String_comparison_exp
+  sequence: String_comparison_exp
+  sequence_length: Int_comparison_exp
+  sequence_mass: Int_comparison_exp
+  sequence_modified: date_comparison_exp
+  sequence_version: Int_comparison_exp
+  uniprot_id: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "protein"
+"""
+enum protein_constraint {
+  """unique or primary key constraint"""
+  protein_accession_key
+
+  """unique or primary key constraint"""
+  protein_pkey
+
+  """unique or primary key constraint"""
+  protein_uniprot_id_key
+}
+
+"""
+input type for incrementing numeric columns in table "protein"
+"""
+input protein_inc_input {
+  info_version: Int
+  organism_taxonomy: Int
+  sequence_length: Int
+  sequence_mass: Int
+  sequence_version: Int
+}
+
+"""
+input type for inserting data into table "protein"
+"""
+input protein_insert_input {
+  accession: String
+  allergy_type: String
+  common_name: String
+  info_created: date
+  info_modified: date
+  info_type: String
+  info_version: Int
+  organism_lineage: String
+  organism_taxonomy: Int
+  protein_name: String
+  protein_type: String
+  scientific_name: String
+  sequence: String
+  sequence_length: Int
+  sequence_mass: Int
+  sequence_modified: date
+  sequence_version: Int
+  uniprot_id: String
+}
+
+"""aggregate max on columns"""
+type protein_max_fields {
+  accession: String
+  allergy_type: String
+  common_name: String
+  info_created: date
+  info_modified: date
+  info_type: String
+  info_version: Int
+  organism_lineage: String
+  organism_taxonomy: Int
+  protein_name: String
+  protein_type: String
+  scientific_name: String
+  sequence: String
+  sequence_length: Int
+  sequence_mass: Int
+  sequence_modified: date
+  sequence_version: Int
+  uniprot_id: String
+}
+
+"""aggregate min on columns"""
+type protein_min_fields {
+  accession: String
+  allergy_type: String
+  common_name: String
+  info_created: date
+  info_modified: date
+  info_type: String
+  info_version: Int
+  organism_lineage: String
+  organism_taxonomy: Int
+  protein_name: String
+  protein_type: String
+  scientific_name: String
+  sequence: String
+  sequence_length: Int
+  sequence_mass: Int
+  sequence_modified: date
+  sequence_version: Int
+  uniprot_id: String
+}
+
+"""
+response of any mutation on the table "protein"
+"""
+type protein_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [protein!]!
+}
+
+"""
+on conflict condition type for table "protein"
+"""
+input protein_on_conflict {
+  constraint: protein_constraint!
+  update_columns: [protein_update_column!]! = []
+  where: protein_bool_exp
+}
+
+"""Ordering options when selecting data from "protein"."""
+input protein_order_by {
+  accession: order_by
+  allergy_type: order_by
+  common_name: order_by
+  info_created: order_by
+  info_modified: order_by
+  info_type: order_by
+  info_version: order_by
+  organism_lineage: order_by
+  organism_taxonomy: order_by
+  protein_name: order_by
+  protein_type: order_by
+  scientific_name: order_by
+  sequence: order_by
+  sequence_length: order_by
+  sequence_mass: order_by
+  sequence_modified: order_by
+  sequence_version: order_by
+  uniprot_id: order_by
+}
+
+"""primary key columns input for table: protein"""
+input protein_pk_columns_input {
+  accession: String!
+  uniprot_id: String!
+}
+
+"""
+select columns of table "protein"
+"""
+enum protein_select_column {
+  """column name"""
+  accession
+
+  """column name"""
+  allergy_type
+
+  """column name"""
+  common_name
+
+  """column name"""
+  info_created
+
+  """column name"""
+  info_modified
+
+  """column name"""
+  info_type
+
+  """column name"""
+  info_version
+
+  """column name"""
+  organism_lineage
+
+  """column name"""
+  organism_taxonomy
+
+  """column name"""
+  protein_name
+
+  """column name"""
+  protein_type
+
+  """column name"""
+  scientific_name
+
+  """column name"""
+  sequence
+
+  """column name"""
+  sequence_length
+
+  """column name"""
+  sequence_mass
+
+  """column name"""
+  sequence_modified
+
+  """column name"""
+  sequence_version
+
+  """column name"""
+  uniprot_id
+}
+
+"""
+input type for updating data in table "protein"
+"""
+input protein_set_input {
+  accession: String
+  allergy_type: String
+  common_name: String
+  info_created: date
+  info_modified: date
+  info_type: String
+  info_version: Int
+  organism_lineage: String
+  organism_taxonomy: Int
+  protein_name: String
+  protein_type: String
+  scientific_name: String
+  sequence: String
+  sequence_length: Int
+  sequence_mass: Int
+  sequence_modified: date
+  sequence_version: Int
+  uniprot_id: String
+}
+
+"""aggregate stddev on columns"""
+type protein_stddev_fields {
+  info_version: Float
+  organism_taxonomy: Float
+  sequence_length: Float
+  sequence_mass: Float
+  sequence_version: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type protein_stddev_pop_fields {
+  info_version: Float
+  organism_taxonomy: Float
+  sequence_length: Float
+  sequence_mass: Float
+  sequence_version: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type protein_stddev_samp_fields {
+  info_version: Float
+  organism_taxonomy: Float
+  sequence_length: Float
+  sequence_mass: Float
+  sequence_version: Float
+}
+
+"""aggregate sum on columns"""
+type protein_sum_fields {
+  info_version: Int
+  organism_taxonomy: Int
+  sequence_length: Int
+  sequence_mass: Int
+  sequence_version: Int
+}
+
+"""
+update columns of table "protein"
+"""
+enum protein_update_column {
+  """column name"""
+  accession
+
+  """column name"""
+  allergy_type
+
+  """column name"""
+  common_name
+
+  """column name"""
+  info_created
+
+  """column name"""
+  info_modified
+
+  """column name"""
+  info_type
+
+  """column name"""
+  info_version
+
+  """column name"""
+  organism_lineage
+
+  """column name"""
+  organism_taxonomy
+
+  """column name"""
+  protein_name
+
+  """column name"""
+  protein_type
+
+  """column name"""
+  scientific_name
+
+  """column name"""
+  sequence
+
+  """column name"""
+  sequence_length
+
+  """column name"""
+  sequence_mass
+
+  """column name"""
+  sequence_modified
+
+  """column name"""
+  sequence_version
+
+  """column name"""
+  uniprot_id
+}
+
+"""aggregate var_pop on columns"""
+type protein_var_pop_fields {
+  info_version: Float
+  organism_taxonomy: Float
+  sequence_length: Float
+  sequence_mass: Float
+  sequence_version: Float
+}
+
+"""aggregate var_samp on columns"""
+type protein_var_samp_fields {
+  info_version: Float
+  organism_taxonomy: Float
+  sequence_length: Float
+  sequence_mass: Float
+  sequence_version: Float
+}
+
+"""aggregate variance on columns"""
+type protein_variance_fields {
+  info_version: Float
+  organism_taxonomy: Float
+  sequence_length: Float
+  sequence_mass: Float
+  sequence_version: Float
+}
+
+type query_root {
+  """
+  fetch data from the table: "protein"
+  """
+  protein(
+    """distinct select on columns"""
+    distinct_on: [protein_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [protein_order_by!]
+
+    """filter the rows returned"""
+    where: protein_bool_exp
+  ): [protein!]!
+
+  """
+  fetch aggregated fields from the table: "protein"
+  """
+  protein_aggregate(
+    """distinct select on columns"""
+    distinct_on: [protein_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [protein_order_by!]
+
+    """filter the rows returned"""
+    where: protein_bool_exp
+  ): protein_aggregate!
+
+  """fetch data from the table: "protein" using primary key columns"""
+  protein_by_pk(accession: String!, uniprot_id: String!): protein
+
+  """
+  fetch data from the table: "scores_BA"
+  """
+  scores_BA(
+    """distinct select on columns"""
+    distinct_on: [scores_BA_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [scores_BA_order_by!]
+
+    """filter the rows returned"""
+    where: scores_BA_bool_exp
+  ): [scores_BA!]!
+
+  """
+  fetch aggregated fields from the table: "scores_BA"
+  """
+  scores_BA_aggregate(
+    """distinct select on columns"""
+    distinct_on: [scores_BA_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [scores_BA_order_by!]
+
+    """filter the rows returned"""
+    where: scores_BA_bool_exp
+  ): scores_BA_aggregate!
+
+  """fetch data from the table: "scores_BA" using primary key columns"""
+  scores_BA_by_pk(id: Int!): scores_BA
+}
+
+"""
+scores from block-aligner
+
+
+columns and relationships of "scores_BA"
+"""
+type scores_BA {
+  compared_id: String!
+  id: Int!
+  reference_id: String!
+  scope: String!
+  score: Int!
+}
+
+"""
+aggregated selection of "scores_BA"
+"""
+type scores_BA_aggregate {
+  aggregate: scores_BA_aggregate_fields
+  nodes: [scores_BA!]!
+}
+
+"""
+aggregate fields of "scores_BA"
+"""
+type scores_BA_aggregate_fields {
+  avg: scores_BA_avg_fields
+  count(columns: [scores_BA_select_column!], distinct: Boolean): Int!
+  max: scores_BA_max_fields
+  min: scores_BA_min_fields
+  stddev: scores_BA_stddev_fields
+  stddev_pop: scores_BA_stddev_pop_fields
+  stddev_samp: scores_BA_stddev_samp_fields
+  sum: scores_BA_sum_fields
+  var_pop: scores_BA_var_pop_fields
+  var_samp: scores_BA_var_samp_fields
+  variance: scores_BA_variance_fields
+}
+
+"""aggregate avg on columns"""
+type scores_BA_avg_fields {
+  id: Float
+  score: Float
+}
+
+"""
+Boolean expression to filter rows from the table "scores_BA". All fields are combined with a logical 'AND'.
+"""
+input scores_BA_bool_exp {
+  _and: [scores_BA_bool_exp!]
+  _not: scores_BA_bool_exp
+  _or: [scores_BA_bool_exp!]
+  compared_id: String_comparison_exp
+  id: Int_comparison_exp
+  reference_id: String_comparison_exp
+  scope: String_comparison_exp
+  score: Int_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "scores_BA"
+"""
+enum scores_BA_constraint {
+  """unique or primary key constraint"""
+  scores_BA_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "scores_BA"
+"""
+input scores_BA_inc_input {
+  id: Int
+  score: Int
+}
+
+"""
+input type for inserting data into table "scores_BA"
+"""
+input scores_BA_insert_input {
+  compared_id: String
+  id: Int
+  reference_id: String
+  scope: String
+  score: Int
+}
+
+"""aggregate max on columns"""
+type scores_BA_max_fields {
+  compared_id: String
+  id: Int
+  reference_id: String
+  scope: String
+  score: Int
+}
+
+"""aggregate min on columns"""
+type scores_BA_min_fields {
+  compared_id: String
+  id: Int
+  reference_id: String
+  scope: String
+  score: Int
+}
+
+"""
+response of any mutation on the table "scores_BA"
+"""
+type scores_BA_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [scores_BA!]!
+}
+
+"""
+on conflict condition type for table "scores_BA"
+"""
+input scores_BA_on_conflict {
+  constraint: scores_BA_constraint!
+  update_columns: [scores_BA_update_column!]! = []
+  where: scores_BA_bool_exp
+}
+
+"""Ordering options when selecting data from "scores_BA"."""
+input scores_BA_order_by {
+  compared_id: order_by
+  id: order_by
+  reference_id: order_by
+  scope: order_by
+  score: order_by
+}
+
+"""primary key columns input for table: scores_BA"""
+input scores_BA_pk_columns_input {
+  id: Int!
+}
+
+"""
+select columns of table "scores_BA"
+"""
+enum scores_BA_select_column {
+  """column name"""
+  compared_id
+
+  """column name"""
+  id
+
+  """column name"""
+  reference_id
+
+  """column name"""
+  scope
+
+  """column name"""
+  score
+}
+
+"""
+input type for updating data in table "scores_BA"
+"""
+input scores_BA_set_input {
+  compared_id: String
+  id: Int
+  reference_id: String
+  scope: String
+  score: Int
+}
+
+"""aggregate stddev on columns"""
+type scores_BA_stddev_fields {
+  id: Float
+  score: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type scores_BA_stddev_pop_fields {
+  id: Float
+  score: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type scores_BA_stddev_samp_fields {
+  id: Float
+  score: Float
+}
+
+"""aggregate sum on columns"""
+type scores_BA_sum_fields {
+  id: Int
+  score: Int
+}
+
+"""
+update columns of table "scores_BA"
+"""
+enum scores_BA_update_column {
+  """column name"""
+  compared_id
+
+  """column name"""
+  id
+
+  """column name"""
+  reference_id
+
+  """column name"""
+  scope
+
+  """column name"""
+  score
+}
+
+"""aggregate var_pop on columns"""
+type scores_BA_var_pop_fields {
+  id: Float
+  score: Float
+}
+
+"""aggregate var_samp on columns"""
+type scores_BA_var_samp_fields {
+  id: Float
+  score: Float
+}
+
+"""aggregate variance on columns"""
+type scores_BA_variance_fields {
+  id: Float
+  score: Float
+}
+
+"""
+Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'.
+"""
+input String_comparison_exp {
+  _eq: String
+  _gt: String
+  _gte: String
+
+  """does the column match the given case-insensitive pattern"""
+  _ilike: String
+  _in: [String!]
+
+  """
+  does the column match the given POSIX regular expression, case insensitive
+  """
+  _iregex: String
+  _is_null: Boolean
+
+  """does the column match the given pattern"""
+  _like: String
+  _lt: String
+  _lte: String
+  _neq: String
+
+  """does the column NOT match the given case-insensitive pattern"""
+  _nilike: String
+  _nin: [String!]
+
+  """
+  does the column NOT match the given POSIX regular expression, case insensitive
+  """
+  _niregex: String
+
+  """does the column NOT match the given pattern"""
+  _nlike: String
+
+  """
+  does the column NOT match the given POSIX regular expression, case sensitive
+  """
+  _nregex: String
+
+  """does the column NOT match the given SQL regular expression"""
+  _nsimilar: String
+
+  """
+  does the column match the given POSIX regular expression, case sensitive
+  """
+  _regex: String
+
+  """does the column match the given SQL regular expression"""
+  _similar: String
+}
+
+type subscription_root {
+  """
+  fetch data from the table: "protein"
+  """
+  protein(
+    """distinct select on columns"""
+    distinct_on: [protein_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [protein_order_by!]
+
+    """filter the rows returned"""
+    where: protein_bool_exp
+  ): [protein!]!
+
+  """
+  fetch aggregated fields from the table: "protein"
+  """
+  protein_aggregate(
+    """distinct select on columns"""
+    distinct_on: [protein_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [protein_order_by!]
+
+    """filter the rows returned"""
+    where: protein_bool_exp
+  ): protein_aggregate!
+
+  """fetch data from the table: "protein" using primary key columns"""
+  protein_by_pk(accession: String!, uniprot_id: String!): protein
+
+  """
+  fetch data from the table: "scores_BA"
+  """
+  scores_BA(
+    """distinct select on columns"""
+    distinct_on: [scores_BA_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [scores_BA_order_by!]
+
+    """filter the rows returned"""
+    where: scores_BA_bool_exp
+  ): [scores_BA!]!
+
+  """
+  fetch aggregated fields from the table: "scores_BA"
+  """
+  scores_BA_aggregate(
+    """distinct select on columns"""
+    distinct_on: [scores_BA_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [scores_BA_order_by!]
+
+    """filter the rows returned"""
+    where: scores_BA_bool_exp
+  ): scores_BA_aggregate!
+
+  """fetch data from the table: "scores_BA" using primary key columns"""
+  scores_BA_by_pk(id: Int!): scores_BA
+}

@@ -1,0 +1,1 @@
+apollo client:download-schema schema.graphql --endpoint https://current-rabbit-87.hasura.app/v1/graphql

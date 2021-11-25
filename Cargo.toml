@@ -1,0 +1,25 @@
+[package]
+name = "block-aligner-postgres"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+block-aligner = { version = "^0.2.0", features = ["simd_avx2"] }
+
+cynic = { version = "0.14.1", features = ["surf", "reqwest-blocking"] }
+serde_json = { version = "1.0", optional = true }
+
+# Reqwest example requirements
+reqwest = { version = "0.11", features = ["json", "blocking"] }
+tokio = { version = "1.13", features = ["macros"] }
+
+# Surf example requirements
+surf = "2.3"
+async-std = "1.10"
+
+chrono = { version = "0.4", features = ["serde"]}
+
+[features]
+simd_avx2 = ["block-aligner/simd_avx2"]
