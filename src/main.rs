@@ -29,7 +29,7 @@ fn main() {
             let a = Block::<_, true, false>::align(&q, &r, &BLOSUM62, gaps, block_size..=block_size, 0);
             let res = a.res();
             
-            scores.push(ScoresBAInsertInput { compared_id: Some(proteins_vec[j].uniprot_id.clone()), reference_id: Some(proteins_vec[i].uniprot_id.clone()), score: Some(res.score), scope: Some("alpha-S1-casein".to_string())});
+            scores.push(ScoresBAInsertInput { compared_id: Some(proteins_vec[j].uniprot_id.clone()), reference_id: Some(proteins_vec[i].uniprot_id.clone()), score: Some(res.score), scope: Some("fish".to_string())});
         }
 
         let mutation_result = run_mutation(scores.clone());
@@ -103,7 +103,7 @@ mod queries {
     #[derive(cynic::QueryFragment, Debug)]
     #[cynic(graphql_type = "query_root")]
     pub struct MyQuery {
-        #[arguments(r#where = ProteinBoolExp { protein_type: Some(StringComparisonExp { _eq: Some("alpha-S1-casein".to_string()) }) })]
+        #[arguments(r#where = ProteinBoolExp { allergy_type: Some(StringComparisonExp { _eq: Some("fish".to_string()) }) })]
         pub protein: Vec<protein>,
     }
 
@@ -116,8 +116,8 @@ mod queries {
     #[derive(cynic::InputObject, Debug)]
     #[cynic(graphql_type = "protein_bool_exp")]
     pub struct ProteinBoolExp {
-        #[cynic(rename = "protein_type")]
-        pub protein_type: Option<StringComparisonExp>,
+        #[cynic(rename = "allergy_type")]
+        pub allergy_type: Option<StringComparisonExp>,
     }
 
     #[derive(cynic::InputObject, Debug)]
