@@ -389,6 +389,16 @@ type protein_mutation_response {
 }
 
 """
+input type for inserting object relation for remote table "protein"
+"""
+input protein_obj_rel_insert_input {
+  data: protein_insert_input!
+
+  """on conflict condition"""
+  on_conflict: protein_on_conflict
+}
+
+"""
 on conflict condition type for table "protein"
 """
 input protein_on_conflict {
@@ -727,6 +737,12 @@ columns and relationships of "scores_BA"
 type scores_BA {
   compared_id: String!
   id: Int!
+
+  """An object relationship"""
+  proteinByComparedId: protein!
+
+  """An object relationship"""
+  proteinByReferenceId: protein!
   reference_id: String!
   scope: String!
   score: Int!
@@ -772,6 +788,8 @@ input scores_BA_bool_exp {
   _or: [scores_BA_bool_exp!]
   compared_id: String_comparison_exp
   id: Int_comparison_exp
+  proteinByComparedId: protein_bool_exp
+  proteinByReferenceId: protein_bool_exp
   reference_id: String_comparison_exp
   scope: String_comparison_exp
   score: Int_comparison_exp
@@ -799,6 +817,8 @@ input type for inserting data into table "scores_BA"
 input scores_BA_insert_input {
   compared_id: String
   id: Int
+  proteinByComparedId: protein_obj_rel_insert_input
+  proteinByReferenceId: protein_obj_rel_insert_input
   reference_id: String
   scope: String
   score: Int
@@ -846,6 +866,8 @@ input scores_BA_on_conflict {
 input scores_BA_order_by {
   compared_id: order_by
   id: order_by
+  proteinByComparedId: protein_order_by
+  proteinByReferenceId: protein_order_by
   reference_id: order_by
   scope: order_by
   score: order_by
